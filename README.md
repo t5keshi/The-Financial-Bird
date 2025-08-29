@@ -1,0 +1,1 @@
+Deploy from root on GitHub Pages. Automation is client-side using RSS feeds and Stooq prices. Replace assets/financial-bird-logo.png with your real logo anytime.

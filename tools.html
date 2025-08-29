@@ -1,0 +1,63 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<link rel="stylesheet" href="assets/styles.css"/>
+<title>Tools - The Financial Bird</title></head>
+<body onload="initHeaderBindings();initNewsletter()">
+<header class="header"><div class="inner">
+  <div class="site-title">
+    <img src="assets/financial-bird-logo.png" class="logo" alt="The Financial Bird logo"/>
+    <h1>The Financial Bird</h1>
+    <label class="switch" style="margin-left:auto"><span class="small">Theme</span><input type="checkbox" id="themeToggle"/></label>
+    <a class="button secondary" href="#" id="subscribeBtn" style="margin-left:8px">Subscribe</a>
+  </div>
+  <nav class="nav">
+    <a href="index.html" class="">Home</a>
+    <a href="research.html" class="">Research</a>
+    <a href="portfolio.html" class="">Portfolio</a>
+    <a href="tools.html" class="active">Tools</a>
+    <a href="blog.html" class="">Blog</a>
+    <a href="stocks.html" class="">Stocks to Watch</a>
+    <a href="about.html" class="">About</a>
+  </nav>
+</div></header>
+<main class="container"><div class="grid cols-3">
+  <div class="card"><div class="h2">Dividend Discount Model</div>
+    <label>Dividend next year</label><input id="ddm_d1" class="input" value="2.00"/>
+    <label>Required return percent</label><input id="ddm_r" class="input" value="9"/>
+    <label>Long term growth percent</label><input id="ddm_g" class="input" value="3"/>
+    <button class="button" onclick="ddm()">Price</button><div id="ddm_out" class="badge" style="margin-top:8px">—</div>
+  </div>
+  <div class="card"><div class="h2">Relative valuation</div>
+    <label>Peer P/E</label><input id="rel_pe" class="input" value="18"/>
+    <label>Your EPS</label><input id="rel_eps" class="input" value="5.2"/>
+    <button class="button" onclick="relVal()">Fair value</button><div id="rel_out" class="badge" style="margin-top:8px">—</div>
+  </div>
+  <div class="card"><div class="h2">Monte Carlo (price path)</div>
+    <label>Start price</label><input id="mc_s0" class="input" value="100"/>
+    <label>Mean percent (daily)</label><input id="mc_mu" class="input" value="0.05"/>
+    <label>Vol percent (daily)</label><input id="mc_sigma" class="input" value="1.2"/>
+    <label>Days</label><input id="mc_n" class="input" value="60"/>
+    <button class="button" onclick="mc()">Simulate</button><div id="mc_out" class="badge" style="margin-top:8px">—</div>
+  </div>
+</div>
+<script>
+function number(v){const x=parseFloat(v);return isNaN(x)?0:x}
+function ddm(){const d1=number(document.getElementById('ddm_d1').value);const r=number(document.getElementById('ddm_r').value)/100;const g=number(document.getElementById('ddm_g').value)/100;const p=d1/(r-g);document.getElementById('ddm_out').textContent = isFinite(p)?('$ '+p.toFixed(2)):'—'}
+function relVal(){const pe=number(document.getElementById('rel_pe').value);const eps=number(document.getElementById('rel_eps').value);document.getElementById('rel_out').textContent='$ '+(pe*eps).toFixed(2)}
+function mc(){let s=number(document.getElementById('mc_s0').value);const mu=number(document.getElementById('mc_mu').value)/100;const sg=number(document.getElementById('mc_sigma').value)/100;const n=Math.max(1,parseInt(number(document.getElementById('mc_n').value)));for(let i=0;i<n;i++){const z=(Math.random()*2-1)+(Math.random()*2-1)+(Math.random()*2-1); s = s*Math.exp((mu-0.5*sg*sg) + sg*z/1.732)}document.getElementById('mc_out').textContent='Sim end price $ '+s.toFixed(2)}
+</script></main>
+<footer class="footer">© 2025 The Financial Bird</footer>
+<div class="modal" id="newsletterModal"><div class="box">
+  <h2 class="h2">Subscribe to The Financial Bird</h2>
+  <p>Get weekly market notes and stocks to watch every Monday.</p>
+  <form action="https://formspree.io/f/xgvlaeny" method="POST">
+    <input class="input" name="email" type="email" placeholder="Email" required/>
+    <div style="margin-top:10px;display:flex;gap:10px">
+      <button class="button" type="submit" onclick="localStorage.setItem('tfb_sub_seen','1')">Subscribe</button>
+      <button class="button secondary" type="button" onclick="closeNewsletter()">Maybe later</button>
+    </div>
+  </form>
+</div></div>
+<script src="assets/util.js"></script>
+<script src="assets/ai.js"></script>
+</body></html>

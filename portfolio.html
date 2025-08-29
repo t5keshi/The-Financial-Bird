@@ -1,0 +1,77 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<link rel="stylesheet" href="assets/styles.css"/>
+<title>Portfolio - The Financial Bird</title></head>
+<body onload="initHeaderBindings();initNewsletter()">
+<header class="header"><div class="inner">
+  <div class="site-title">
+    <img src="assets/financial-bird-logo.png" class="logo" alt="The Financial Bird logo"/>
+    <h1>The Financial Bird</h1>
+    <label class="switch" style="margin-left:auto"><span class="small">Theme</span><input type="checkbox" id="themeToggle"/></label>
+    <a class="button secondary" href="#" id="subscribeBtn" style="margin-left:8px">Subscribe</a>
+  </div>
+  <nav class="nav">
+    <a href="index.html" class="">Home</a>
+    <a href="research.html" class="">Research</a>
+    <a href="portfolio.html" class="active">Portfolio</a>
+    <a href="tools.html" class="">Tools</a>
+    <a href="blog.html" class="">Blog</a>
+    <a href="stocks.html" class="">Stocks to Watch</a>
+    <a href="about.html" class="">About</a>
+  </nav>
+</div></header>
+<main class="container"><div class="card">
+  <div class="h2">Portfolio Tracker (beginner friendly)</div>
+  <p class="small">Enter a few tickers and weights. We fetch daily prices and compute average return, volatility, and Sharpe. Use equal weights if you are unsure.</p>
+  <div class="grid cols-3">
+    <div><label>Tickers (comma separated)</label><textarea id="pf_tickers" class="input" rows="3">AAPL, MSFT, NVDA</textarea></div>
+    <div><label>Weights (same length)</label><textarea id="pf_weights" class="input" rows="3">0.33, 0.33, 0.34</textarea></div>
+    <div><label>Lookback days</label><input id="pf_days" class="input" value="252"/></div>
+  </div>
+  <button class="button" id="pf_run">Compute</button>
+  <div id="pf_out" class="section"></div>
+  <script>
+    document.getElementById('pf_run').onclick=async function(){
+      const t = document.getElementById('pf_tickers').value.split(',').map(function(s){return s.trim().toUpperCase()}).filter(Boolean);
+      const w = document.getElementById('pf_weights').value.split(',').map(function(s){return parseFloat(s.trim())}).filter(function(x){return !isNaN(x)});
+      const m = await portfolioMetrics(t,w);
+      const mean = (m.mean*100).toFixed(2);
+      const vol = (m.stdev*100).toFixed(2);
+      const sharpe = m.sharpe.toFixed(2);
+      document.getElementById('pf_out').innerHTML = '<table class="table"><tbody>'+
+        '<tr><td>Average daily return</td><td><strong>'+mean+' percent</strong></td></tr>'+
+        '<tr><td>Daily volatility</td><td><strong>'+vol+' percent</strong></td></tr>'+
+        '<tr><td>Sharpe ratio</td><td><strong>'+sharpe+'</strong></td></tr>'+
+      '</tbody></table><p class="small">Note: This is a simplified model for learning.</p>';
+    }
+  </script>
+</div>
+<div class="card">
+  <div class="h2">Mock personal portfolio</div>
+  <p class="small">Example holdings for demonstration. This does not change.</p>
+  <ul id="mock_list"><li>AAPL</li><li>MSFT</li><li>NVDA</li><li>JPM</li></ul>
+  <div id="mock_out" class="badge">—</div>
+  <script>
+    (async function(){
+      const t = Array.from(document.querySelectorAll('#mock_list li')).map(function(li){return li.textContent.trim()});
+      const w = t.map(function(){return 1/t.length});
+      const m = await portfolioMetrics(t,w);
+      document.getElementById('mock_out').textContent = 'Mean '+(m.mean*100).toFixed(2)+' percent, Vol '+(m.stdev*100).toFixed(2)+' percent, Sharpe '+m.sharpe.toFixed(2);
+    })();
+  </script>
+</div></main>
+<footer class="footer">© 2025 The Financial Bird</footer>
+<div class="modal" id="newsletterModal"><div class="box">
+  <h2 class="h2">Subscribe to The Financial Bird</h2>
+  <p>Get weekly market notes and stocks to watch every Monday.</p>
+  <form action="https://formspree.io/f/xgvlaeny" method="POST">
+    <input class="input" name="email" type="email" placeholder="Email" required/>
+    <div style="margin-top:10px;display:flex;gap:10px">
+      <button class="button" type="submit" onclick="localStorage.setItem('tfb_sub_seen','1')">Subscribe</button>
+      <button class="button secondary" type="button" onclick="closeNewsletter()">Maybe later</button>
+    </div>
+  </form>
+</div></div>
+<script src="assets/util.js"></script>
+<script src="assets/ai.js"></script>
+</body></html>

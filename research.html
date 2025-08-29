@@ -1,0 +1,55 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<link rel="stylesheet" href="assets/styles.css"/>
+<title>Research - The Financial Bird</title></head>
+<body onload="initHeaderBindings();initNewsletter()">
+<header class="header"><div class="inner">
+  <div class="site-title">
+    <img src="assets/financial-bird-logo.png" class="logo" alt="The Financial Bird logo"/>
+    <h1>The Financial Bird</h1>
+    <label class="switch" style="margin-left:auto"><span class="small">Theme</span><input type="checkbox" id="themeToggle"/></label>
+    <a class="button secondary" href="#" id="subscribeBtn" style="margin-left:8px">Subscribe</a>
+  </div>
+  <nav class="nav">
+    <a href="index.html" class="">Home</a>
+    <a href="research.html" class="active">Research</a>
+    <a href="portfolio.html" class="">Portfolio</a>
+    <a href="tools.html" class="">Tools</a>
+    <a href="blog.html" class="">Blog</a>
+    <a href="stocks.html" class="">Stocks to Watch</a>
+    <a href="about.html" class="">About</a>
+  </nav>
+</div></header>
+<main class="container"><div class="card">
+  <div class="h2">This week's research notes</div>
+  <div id="researchNotes"></div>
+  <div style="margin-top:8px"><button class="button secondary" onclick="window.print()">Save as PDF</button></div>
+</div>
+<script>renderWeeklyBlog('#researchNotes')</script>
+<div class="grid cols-2">
+  <div class="card">
+    <div class="h2">Earnings calendar (this week)</div>
+    <div id="earningsCal"></div>
+    <script>renderEarningsCalendar('#earningsCal')</script>
+  </div>
+  <div class="card">
+    <div class="h2">Economic calendar</div>
+    <div id="econCal"></div>
+    <script>renderEconomicCalendarMonth('#econCal')</script>
+  </div>
+</div></main>
+<footer class="footer">© 2025 The Financial Bird</footer>
+<div class="modal" id="newsletterModal"><div class="box">
+  <h2 class="h2">Subscribe to The Financial Bird</h2>
+  <p>Get weekly market notes and stocks to watch every Monday.</p>
+  <form action="https://formspree.io/f/xgvlaeny" method="POST">
+    <input class="input" name="email" type="email" placeholder="Email" required/>
+    <div style="margin-top:10px;display:flex;gap:10px">
+      <button class="button" type="submit" onclick="localStorage.setItem('tfb_sub_seen','1')">Subscribe</button>
+      <button class="button secondary" type="button" onclick="closeNewsletter()">Maybe later</button>
+    </div>
+  </form>
+</div></div>
+<script src="assets/util.js"></script>
+<script src="assets/ai.js"></script>
+</body></html>
